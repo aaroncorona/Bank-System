@@ -22,10 +22,15 @@ import javafx.stage.Stage;
 
 public class BankClient extends Application {
 
+    private Bank bank;
     private TextField tfAcctNum;
     private TextField tfAmount;
     private String responseMsg = "";
     private Label labelResponse;
+
+    public BankClient() {
+        bank = new BankProxy();
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,9 +55,6 @@ public class BankClient extends Application {
         amtRow.setAlignment(Pos.CENTER);
         amtRow.getChildren().addAll(labelAmt, tfAmount);
 
-        // Inject a Bank proxy
-        Bank bank = new BankProxy();
-
         // Add Buttons for bank actions in an HBox container
         Button btnBalance = new Button("Balance");
         Button btnDeposit = new Button("Deposit");
@@ -64,28 +66,28 @@ public class BankClient extends Application {
         buttonRow.setSpacing(10);
         buttonRow.getChildren().addAll(btnBalance, btnDeposit, btnWithdraw, btnQuit);
 
+        // Add a Label that returns a message from the Bank proxy
+        labelResponse = new Label();
+        labelResponse.setText(responseMsg);
+
         // Set button actions to call the Bank proxy
         btnBalance.setOnAction(event -> {
-            // Return balance
-            bank.getBalance(getAcctNum());
+            // Return balance and print result on Label
+            addResponseText(bank.getBalance(getAcctNum()));
         });
         btnDeposit.setOnAction(event -> {
-            // Make deposit
-            bank.makeDeposit(getAcctNum(), getAmount());
+            // Make deposit and print result on Label
+            addResponseText(bank.makeDeposit(getAcctNum(), getAmount()));
         });
         btnWithdraw.setOnAction(event -> {
-            // Make withdraw
-            bank.makeWithdraw(getAcctNum(), getAmount());
+            // Make withdraw and print result on Label
+            addResponseText(bank.makeWithdraw(getAcctNum(), getAmount()));
         });
         btnQuit.setOnAction(event -> {
             // Close the connection and exit the program
             bank.endConnection();
             System.exit(0);
         });
-
-        // Add a Label that returns a message from the Bank proxy
-        labelResponse = new Label();
-        labelResponse.setText(responseMsg);
 
         // Create an outer container (vertical box) for the rows
         VBox vbox = new VBox();
@@ -109,8 +111,7 @@ public class BankClient extends Application {
         try {
             acctNum = Integer.parseInt(tfAcctNum.getText());
         } catch (NumberFormatException e) {
-            // Put Error msg on status area
-            addResponseText("Error - Please enter a valid Account Number\n");
+            System.out.println(e);
         }
         return acctNum;
     }
@@ -121,8 +122,7 @@ public class BankClient extends Application {
         try {
             amount = Integer.parseInt(tfAmount.getText());
         } catch (NumberFormatException e) {
-            // Put Error msg on status area
-            addResponseText("Error - Please enter a valid Amount\n");
+            System.out.println(e);
         }
         return amount;
     }
@@ -135,6 +135,7 @@ public class BankClient extends Application {
 
     // Main method to launch app
     public static void main(String[] args) {
-        launch();
+        BankClient client = new BankClient();
+        client.launch(args);
     }
 }

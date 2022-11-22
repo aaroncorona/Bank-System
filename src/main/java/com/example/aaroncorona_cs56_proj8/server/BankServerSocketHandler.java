@@ -3,6 +3,8 @@ package com.example.aaroncorona_cs56_proj8.server;
 import com.example.aaroncorona_cs56_proj8.proxy.Bank;
 
 import java.io.IOException;
+import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -11,6 +13,10 @@ import java.util.Scanner;
 public final class BankServerSocketHandler implements Bank, Runnable {
     private Socket socket;
     private HashMap<Integer, Integer> accountBalance;
+
+    private ObjectInputStream inputFromClient;
+    private DataOutputStream outputToClient;
+
 
     protected BankServerSocketHandler(Socket socket) {
         this.socket = socket;
@@ -21,14 +27,19 @@ public final class BankServerSocketHandler implements Bank, Runnable {
     @Override
     public void run() {
         while(socket.isConnected()) {
-            // Get the next client message (structure is request type, account ID, amount)
+            // Get the client request object, then send a response String
             try {
-                Scanner scanner = new Scanner(socket.getInputStream());
-                String message = scanner.nextLine();
-                // TODO parse message
-                System.out.println(message);
+                inputFromClient = new ObjectInputStream(socket.getInputStream());
+                outputToClient = new DataOutputStream(socket.getOutputStream());
+                // Parse request
+                Object object = inputFromClient.readObject();
+                System.out.println(object);
+                // TODO Perform requested action
+                // TODO Send response
             } catch (IOException e) {
                 System.out.println(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
     }

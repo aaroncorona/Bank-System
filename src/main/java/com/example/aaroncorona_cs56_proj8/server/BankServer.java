@@ -22,7 +22,7 @@ public final class BankServer extends Application {
     private void startServer() {
         try {
             // Create a server socket
-            serverSocket = new ServerSocket(8001);
+            serverSocket = new ServerSocket(8000);
             System.out.println("Server started ");
 
             // Continually listen for new socket connections
@@ -30,7 +30,6 @@ public final class BankServer extends Application {
                 // Listen for a new connection request
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected!");
-
                 // Create a thread handler object for Listening to the Client's request
                 BankServerSocketHandler clientHandler = new BankServerSocketHandler(socket);
                 Thread clientThread = new Thread(clientHandler);
