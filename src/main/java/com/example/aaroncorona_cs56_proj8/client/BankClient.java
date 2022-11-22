@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -85,9 +86,14 @@ public class BankClient extends Application {
         labelResponse = new Label();
         labelResponse.setText(responseMsg);
 
-        // Create a container (vertical box) for the rows of horizontal boxes
-        VBox root = new VBox();
-        root.getChildren().addAll(acctNumRow, amtRow, buttonRow, labelResponse);
+        // Create an outer container (vertical box) for the rows
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(acctNumRow, amtRow, buttonRow, labelResponse);
+
+        // Wrap everything in a scrollbar
+        ScrollPane root = new ScrollPane();
+        root.setFitToWidth(true);
+        root.setContent(vbox);
 
         // Scene
         Scene scene = new Scene(root, 400,500);
