@@ -20,18 +20,6 @@ public class BankServerRequest implements Serializable {
         this.amount = 0;
     }
 
-    public String getRequestType() {
-        return requestType;
-    }
-
-    public int getAcctNum() {
-        return acctNum;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
     @Override
     public String toString() {
         return "Request: " + requestType + "; For Account: " + acctNum + "; Regarding Amount: " + amount;
