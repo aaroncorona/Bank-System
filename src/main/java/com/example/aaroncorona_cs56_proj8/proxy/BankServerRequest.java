@@ -34,6 +34,6 @@ public class BankServerRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "Request: " + requestType + " For Account: " + acctNum + " Regarding Amount: " + amount;
+        return "Request: " + requestType + "; For Account: " + acctNum + "; Regarding Amount: " + amount;
     }
 }
