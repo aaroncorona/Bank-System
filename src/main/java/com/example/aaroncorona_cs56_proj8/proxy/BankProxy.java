@@ -1,4 +1,6 @@
-package com.example.aaroncorona_cs56_proj8.server;
+package com.example.aaroncorona_cs56_proj8.proxy;
+
+import com.example.aaroncorona_cs56_proj8.proxy.Bank;
 
 import java.io.DataInputStream;
 import java.io.ObjectOutputStream;
@@ -26,7 +28,7 @@ public final class BankProxy implements Bank {
         if(acctNum > 0) {
             // TODO send output stream
             // TODO get input stream
-            //            fromServer = new DataInputStream(socket.getInputStream());
+            // fromServer = new DataInputStream(socket.getInputStream());
         }
         return null; // TODO send error mes
     }

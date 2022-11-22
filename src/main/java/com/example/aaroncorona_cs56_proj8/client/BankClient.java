@@ -6,8 +6,8 @@
 
 package com.example.aaroncorona_cs56_proj8.client;
 
-import com.example.aaroncorona_cs56_proj8.server.Bank;
-import com.example.aaroncorona_cs56_proj8.server.BankProxy;
+import com.example.aaroncorona_cs56_proj8.proxy.Bank;
+import com.example.aaroncorona_cs56_proj8.proxy.BankProxy;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

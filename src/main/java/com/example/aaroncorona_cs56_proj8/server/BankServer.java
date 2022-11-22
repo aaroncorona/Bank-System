@@ -1,61 +1,59 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
-import java.util.HashMap;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 // Server that performs the Bank actions
-public final class BankServer implements Bank {
-    private HashMap<Integer, Integer> accountBalance = new HashMap<>();
+public final class BankServer extends Application {
+
+    private ServerSocket serverSocket;
 
     // Private constructor to force the use of inner Thread objects
     private BankServer() {
-        launchServer();
+        startServer();
+        launch();
     }
 
     // Helper method to launch the Server and wait for connections
-    private void launchServer() {
-        // TODO add socket listener
-    }
+    private void startServer() {
+        try {
+            // Create a server socket
+            serverSocket = new ServerSocket(8001);
+            System.out.println("Server started ");
 
-    // Inner class to handle socket connections
-    private static class BankServerSocket implements Runnable {
-        // TODO implement Runnable
-        private BankServerSocket() {
+            // Continually listen for new socket connections
+            while (true) {
+                // Listen for a new connection request
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected!");
 
+                // Create a thread handler object for Listening to the Client's request
+                BankServerSocketHandler clientHandler = new BankServerSocketHandler(socket);
+                Thread clientThread = new Thread(clientHandler);
+                clientThread.start();
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        @Override
-        public void run() {
-
-        }
     }
 
     @Override
-    public String getBalance(int acctNum) {
-        // TODO
-        return null;
-    }
+    public void start(Stage stage) {
 
-    @Override
-    public String makeDeposit(int acctNum, int amount) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public String makeWithdraw(int acctNum, int amount) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public String endConnection() {
-        // TODO
-        return null;
     }
 
     // Main method to launch the server
     public static void main(String[] args) {
         new BankServer();
-        // GUI TODO
     }
 }
