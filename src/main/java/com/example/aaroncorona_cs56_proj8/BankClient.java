@@ -20,16 +20,17 @@ import javafx.stage.Stage;
 
 public class BankClient extends Application {
 
-    // Component settings
-    public static final int COMPONENT_WIDTH = 200;
-    public static final int COMPONENT_HEIGHT = COMPONENT_WIDTH;
+    private TextField tfAcctNum;
+    private TextField tfAmount;
+    private String responseMsg = "";
+    private Label labelResponse;
 
     @Override
     public void start(Stage primaryStage) {
 
         // Add a Label and Text fields for "Account Number" in a Hbox
         final Label labelAcctNum = new Label("Enter Account Number:  ");
-        final TextField tfAcctNum = new TextField();
+        tfAcctNum = new TextField();
         tfAcctNum.setPromptText("Account Num");
         tfAcctNum.setPrefColumnCount(10);
         final HBox acctNumRow = new HBox();
@@ -39,15 +40,16 @@ public class BankClient extends Application {
 
         // Add a Label and Text field for "Amount" in a Hbox
         final Label labelAmt = new Label("Enter Amount (USD):  ");
-        final TextField tfAmt = new TextField();
-        tfAmt.setPromptText("Amount ($)");
-        tfAmt.setPrefColumnCount(10);
+        tfAmount = new TextField();
+        tfAmount.setPromptText("Amount ($)");
+        tfAmount.setPrefColumnCount(10);
         final HBox amtRow = new HBox();
         amtRow.setPadding(new Insets(5, 15, 15, 15));
         amtRow.setAlignment(Pos.CENTER);
-        amtRow.getChildren().addAll(labelAmt, tfAmt);
+        amtRow.getChildren().addAll(labelAmt, tfAmount);
 
-        // Inject a Bank proxy TODO
+        // Inject a Bank proxy
+        Bank bank = new BankProxy();
 
         // Add Buttons for bank actions in an HBox container
         Button btnBalance = new Button("Balance");
@@ -60,33 +62,63 @@ public class BankClient extends Application {
         buttonRow.setSpacing(10);
         buttonRow.getChildren().addAll(btnBalance, btnDeposit, btnWithdraw, btnQuit);
 
-        // Set button actions to call the Bank proxy TODO
+        // Set button actions to call the Bank proxy
         btnBalance.setOnAction(event -> {
             // Return balance
+            bank.getBalance(getAcctNum());
         });
         btnDeposit.setOnAction(event -> {
             // Make deposit
+            bank.makeDeposit(getAcctNum(), getAmount());
         });
         btnWithdraw.setOnAction(event -> {
             // Make withdraw
+            bank.makeWithdraw(getAcctNum(), getAmount());
         });
         btnQuit.setOnAction(event -> {
             // Close the connection
-            System.exit(0);
+            bank.endConnection();
         });
 
-        // Add a text area that returns a message from the Bank proxy
-        TextArea response = new TextArea();
+        // Add a Label that returns a message from the Bank proxy
+        labelResponse = new Label();
+        labelResponse.setText(responseMsg);
 
         // Create a container (vertical box) for the rows of horizontal boxes
         VBox root = new VBox();
-        root.getChildren().addAll(acctNumRow, amtRow, buttonRow, response);
+        root.getChildren().addAll(acctNumRow, amtRow, buttonRow, labelResponse);
 
         // Scene
         Scene scene = new Scene(root, 400,500);
         primaryStage.setTitle("Your Account");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    // Helper method to get the account number
+    private int getAcctNum() {
+        int acctNum = 0;
+        try {
+            acctNum = Integer.parseInt(tfAcctNum.getText());
+        } catch (NumberFormatException e) {
+            // Put Error msg on status area
+            responseMsg += "Error - Please enter a valid Account Number\n";
+            labelResponse.setText(responseMsg);
+        }
+        return acctNum;
+    }
+
+    // Helper method to get the amount
+    private int getAmount() {
+        int amount = 0;
+        try {
+            amount = Integer.parseInt(tfAmount.getText());
+        } catch (NumberFormatException e) {
+            // Put Error msg on status area
+            responseMsg += "Error - Please enter a valid Amount\n\n";
+            labelResponse.setText(responseMsg);
+        }
+        return amount;
     }
 
     // Main method to launch app
