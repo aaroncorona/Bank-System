@@ -1,4 +1,4 @@
-# Bank-System
+# Bank System
 
 **Purpose**: Project to practice Multithreading and JavaFx.
 
