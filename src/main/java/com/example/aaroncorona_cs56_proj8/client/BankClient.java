@@ -78,8 +78,9 @@ public class BankClient extends Application {
             bank.makeWithdraw(getAcctNum(), getAmount());
         });
         btnQuit.setOnAction(event -> {
-            // Close the connection
+            // Close the connection and exit the program
             bank.endConnection();
+            System.exit(0);
         });
 
         // Add a Label that returns a message from the Bank proxy

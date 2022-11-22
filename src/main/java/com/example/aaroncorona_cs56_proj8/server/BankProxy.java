@@ -1,47 +1,60 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
-// This is a user-facing Proxy for a real Bank Server
+import java.io.DataInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+// This is a user-facing Proxy that connects to the real Bank Server
 public final class BankProxy implements Bank {
 
-    private BankServer realBank;
+    private Socket socket;
+    private ObjectOutputStream toServer;
+    private DataInputStream fromServer;
 
     public BankProxy() {
-        realBank = new BankServer();
+        createBankClientSocket();
+    }
+
+    // Helper method to create a new socket with the Server
+    private void createBankClientSocket() {
+        // TODO add socket connection here
     }
 
     @Override
-    public double getBalance(int acctNum) {
+    public String getBalance(int acctNum) {
         // Request balance if valid request
         if(acctNum > 0) {
-            return realBank.getBalance(acctNum);
+            // TODO send output stream
+            // TODO get input stream
+            //            fromServer = new DataInputStream(socket.getInputStream());
         }
-        return 0;
+        return null; // TODO send error mes
     }
 
     @Override
-    public void makeDeposit(int acctNum, int amount) {
+    public String makeDeposit(int acctNum, int amount) {
         // Make deposit if valid request
         if(acctNum > 0 && amount > 0) {
-            realBank.makeDeposit(acctNum, amount);
+            // TODO send output stream
+            // TODO get input stream
         }
+        return null; // TODO send error mes
     }
 
     @Override
-    public void makeWithdraw(int acctNum, int amount) {
+    public String makeWithdraw(int acctNum, int amount) {
         // Check if there are enough funds for the withdrawal on behalf of the Server. Otherwise, make the withdrawal
-        if(realBank.getBalance(amount) < amount
-           && acctNum > 0) {
-            realBank.makeWithdraw(acctNum, amount);
-        }
+//        if(this.getBalance(acctNum) >= amount
+//                && acctNum > 0) {
+            // TODO send output stream
+            // TODO get input stream
+//        }
+        return null; // TODO send error mes
     }
 
     @Override
-    public String getLastResultMsg() {
-        return realBank.getLastResultMsg();
-    }
-
-    @Override
-    public void endConnection() {
-         // Close the client thread TODO
+    public String endConnection() {
+         // TODO Close the client thread
+        return "Connection closed";
     }
 }
