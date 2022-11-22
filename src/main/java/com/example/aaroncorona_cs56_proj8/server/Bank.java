@@ -1,4 +1,4 @@
-package com.example.aaroncorona_cs56_proj8;
+package com.example.aaroncorona_cs56_proj8.server;
 
 // Blueprint for Bank functionality
 public interface Bank {

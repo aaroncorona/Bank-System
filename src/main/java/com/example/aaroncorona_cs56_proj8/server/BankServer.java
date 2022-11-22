@@ -1,8 +1,12 @@
-package com.example.aaroncorona_cs56_proj8;
+package com.example.aaroncorona_cs56_proj8.server;
 
 // Server that performs the Bank actions
 public final class BankServer implements Bank {
     // TODO
+
+    // Protected constructor to force the use of the Proxy
+    protected BankServer() {}
+
     @Override
     public double getBalance(int acctNum) {
         return 0;

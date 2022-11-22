@@ -4,15 +4,16 @@
  CS56 Project #8 - Bank System
  ***************************************************************************/
 
-package com.example.aaroncorona_cs56_proj8;
+package com.example.aaroncorona_cs56_proj8.client;
 
+import com.example.aaroncorona_cs56_proj8.server.Bank;
+import com.example.aaroncorona_cs56_proj8.server.BankProxy;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;

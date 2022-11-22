@@ -1,4 +1,4 @@
-package com.example.aaroncorona_cs56_proj8;
+package com.example.aaroncorona_cs56_proj8.server;
 
 // This is a user-facing Proxy for a real Bank Server
 public final class BankProxy implements Bank {
