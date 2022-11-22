@@ -103,8 +103,7 @@ public class BankClient extends Application {
             acctNum = Integer.parseInt(tfAcctNum.getText());
         } catch (NumberFormatException e) {
             // Put Error msg on status area
-            responseMsg += "Error - Please enter a valid Account Number\n";
-            labelResponse.setText(responseMsg);
+            addResponseText("Error - Please enter a valid Account Number\n");
         }
         return acctNum;
     }
@@ -116,10 +115,15 @@ public class BankClient extends Application {
             amount = Integer.parseInt(tfAmount.getText());
         } catch (NumberFormatException e) {
             // Put Error msg on status area
-            responseMsg += "Error - Please enter a valid Amount\n\n";
-            labelResponse.setText(responseMsg);
+            addResponseText("Error - Please enter a valid Amount\n");
         }
         return amount;
+    }
+
+    // Helper method to update the response label
+    private void addResponseText(String newMsg) {
+        responseMsg += newMsg;
+        labelResponse.setText(responseMsg);
     }
 
     // Main method to launch app
