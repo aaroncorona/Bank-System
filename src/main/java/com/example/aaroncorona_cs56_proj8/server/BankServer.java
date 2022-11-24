@@ -48,7 +48,7 @@ public final class BankServer extends Application {
 
     @Override
     public void start(Stage stage) {
-
+        // TODO add GUI label, add protected method to update it
     }
 
     // Main method to launch the server

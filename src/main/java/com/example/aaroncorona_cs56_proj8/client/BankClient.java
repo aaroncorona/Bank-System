@@ -129,7 +129,7 @@ public class BankClient extends Application {
 
     // Helper method to update the response label
     private void addResponseText(String newMsg) {
-        responseMsg += newMsg;
+        responseMsg += newMsg + "\n";
         labelResponse.setText(responseMsg);
     }
 

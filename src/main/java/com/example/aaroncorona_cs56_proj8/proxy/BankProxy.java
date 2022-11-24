@@ -1,7 +1,7 @@
 package com.example.aaroncorona_cs56_proj8.proxy;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
@@ -10,7 +10,7 @@ public final class BankProxy implements Bank {
 
     private Socket socket;
     private ObjectOutputStream toServer;
-    private DataInputStream fromServer;
+    private ObjectInputStream fromServer;
 
     public BankProxy() {
         createBankClientSocket();
@@ -22,7 +22,7 @@ public final class BankProxy implements Bank {
             // Create a socket along with output & input streams to the server
             socket = new Socket("localhost", 8000);
             toServer = new ObjectOutputStream(socket.getOutputStream());
-            fromServer = new DataInputStream(socket.getInputStream());
+            fromServer = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -33,15 +33,16 @@ public final class BankProxy implements Bank {
         // Request balance if valid request
         if(acctNum > 0) {
             try {
-                // Send request
-                System.out.println("Sending request...");
+                // Send request to Server
                 BankServerRequest request = new BankServerRequest("Balance", acctNum);
                 toServer.writeObject(request);
-                // Return response
-                System.out.println("Getting response...");
-                String response = fromServer.readUTF();
+                // Return response from Server
+                String response = fromServer.readObject().toString();
+                System.out.println(response);
                 return response;
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -59,9 +60,11 @@ public final class BankProxy implements Bank {
                 BankServerRequest request = new BankServerRequest("Deposit", acctNum, amount);
                 toServer.writeObject(request);
                 // Return response
-                String response = fromServer.readUTF();
+                String response = fromServer.readObject().toString();
                 return response;
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -80,9 +83,11 @@ public final class BankProxy implements Bank {
                 BankServerRequest request = new BankServerRequest("Withdraw", acctNum, amount);
                 toServer.writeObject(request);
                 // Return response
-                String response = fromServer.readUTF();
+                String response = fromServer.readObject().toString();
                 return response;
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }

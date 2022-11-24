@@ -1,22 +1,20 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
 import com.example.aaroncorona_cs56_proj8.proxy.Bank;
+import com.example.aaroncorona_cs56_proj8.proxy.BankServerRequest;
 
 import java.io.IOException;
-import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Scanner;
 
 // Helper class to handle individual Socket connections
 public final class BankServerSocketHandler implements Bank, Runnable {
     private Socket socket;
-    private HashMap<Integer, Integer> accountBalance;
 
-    private ObjectInputStream inputFromClient;
-    private DataOutputStream outputToClient;
-
+    // All threads should reference the same account map
+    private static HashMap<Integer, Integer> accountBalance;
 
     protected BankServerSocketHandler(Socket socket) {
         this.socket = socket;
@@ -29,13 +27,18 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         while(socket.isConnected()) {
             // Get the client request object, then send a response String
             try {
-                inputFromClient = new ObjectInputStream(socket.getInputStream());
-                outputToClient = new DataOutputStream(socket.getOutputStream());
-                // Parse request
-                Object object = inputFromClient.readObject();
-                System.out.println(object);
+                ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());
+                // TODO Parse request
+                Object object = fromClient.readObject();
                 // TODO Perform requested action
-                // TODO Send response
+                if(object.toString().contains("Balance")) {
+//                    getBalance();
+                }
+                // TODO Send response to Client
+                BankServerResponse response = new BankServerResponse("Success", "Balance", 8888, 100);
+                toClient.writeObject(response);
+                // TODO update Server GUI label
             } catch (IOException e) {
                 System.out.println(e);
             } catch (ClassNotFoundException e) {
@@ -46,25 +49,33 @@ public final class BankServerSocketHandler implements Bank, Runnable {
 
     @Override
     public String getBalance(int acctNum) {
-        // TODO
+        // TODO write logic
+        // TODO make synchronized and delete map so it's thread safe
         return null;
     }
 
     @Override
     public String makeDeposit(int acctNum, int amount) {
-        // TODO
+        // TODO write logic
+        // TODO make synchronized and delete map so it's thread safe
         return null;
     }
 
     @Override
     public String makeWithdraw(int acctNum, int amount) {
-        // TODO
+        // TODO write logic
+        // TODO make synchronized and delete map so it's thread safe
         return null;
     }
 
     @Override
     public String endConnection() {
-        // TODO
+        // TODO write logic
         return null;
+    }
+
+    // Helper method to rebuild the hashmap in a new memory slot for better thread safety
+    private synchronized void updateMap(int key, int value) {
+        // TODO write logic
     }
 }
