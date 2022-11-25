@@ -33,6 +33,7 @@ public final class BankServerSocketHandler implements Bank, Runnable {
                 // Parse the client request, create the requested response, then send it back to the client
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
                 toClient.writeObject(response);
+                toClient.flush();
                 // TODO update Server GUI label
             } catch (IOException e) {
                 System.out.println(e);
@@ -59,7 +60,8 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         }
         // Get status (successful or failed request)
         String status = "Success";
-        if(result.length() == 0) {
+        if(result == null
+             || result.length() == 0) {
             status = "Failed";
         }
         // Get the new Balance after the Bank action
@@ -85,23 +87,45 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         return null;
     }
 
+    // Lookup the balance of the account in the hashmap (or 0 if it doesn't exist)
     @Override
     public String getBalance(int acctNum) {
-        // TODO write logic
-        return null;
+        int balance = 0;
+        if(accountBalance.containsKey(acctNum)) {
+            balance = accountBalance.get(acctNum);
+        }
+        return "Balance: " + balance;
     }
 
+    // Make a deposit and return the new balance
     @Override
     public String makeDeposit(int acctNum, int amount) {
-        // TODO write logic
-        return null;
+        int balance = 0;
+        // Make the deposit if the account exists
+        if(accountBalance.containsKey(acctNum)) {
+            balance = accountBalance.get(acctNum);
+            balance += amount;
+            accountBalance.put(acctNum, balance);
+        } else {
+            // Otherwise, create a new account with the deposit as the balance
+            balance = amount;
+            accountBalance.put(acctNum, balance);
+        }
+        return "Balance: " + balance;
         // TODO use immutableMapUpdate
     }
 
+    // Make a withdrawal and return the new balance
     @Override
     public String makeWithdraw(int acctNum, int amount) {
-        // TODO write logic
-        return null;
+        int balance = 0;
+        // Make the withdrawal if the account exists
+        if(accountBalance.containsKey(acctNum)) {
+            balance = accountBalance.get(acctNum);
+            balance -= amount;
+            accountBalance.put(acctNum, balance);
+        }
+        return "Balance: " + balance;
         // TODO use immutableMapUpdate
     }
 

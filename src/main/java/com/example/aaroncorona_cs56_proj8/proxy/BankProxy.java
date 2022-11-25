@@ -34,11 +34,14 @@ public final class BankProxy implements Bank {
         if(acctNum > 0) {
             try {
                 // Send request to Server
+                System.out.println("sending request to server..."); // todo delete comments
                 BankServerRequest request = new BankServerRequest("Balance", acctNum);
                 toServer.writeObject(request);
+                toServer.flush();
+                System.out.println("request sent!");
                 // Return response from Server
                 String response = fromServer.readObject().toString();
-                System.out.println(response);
+                System.out.println("got response from server: " + response);
                 return response;
             } catch (IOException e) {
                 System.out.println(e);
@@ -57,6 +60,7 @@ public final class BankProxy implements Bank {
                 // Send request
                 BankServerRequest request = new BankServerRequest("Deposit", acctNum, amount);
                 toServer.writeObject(request);
+                toServer.flush();
                 // Return response
                 String response = fromServer.readObject().toString();
                 return response;
@@ -78,6 +82,7 @@ public final class BankProxy implements Bank {
                 // Send request
                 BankServerRequest request = new BankServerRequest("Withdraw", acctNum, amount);
                 toServer.writeObject(request);
+                toServer.flush();
                 // Return response
                 String response = fromServer.readObject().toString();
                 return response;
