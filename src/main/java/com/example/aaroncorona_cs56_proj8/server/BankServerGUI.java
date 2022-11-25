@@ -45,7 +45,7 @@ public final class BankServerGUI extends Application implements Runnable {
 
     // Allow the socket handler threads to update the label to show the status of Server requests
     protected synchronized static void addStatusText(String newText) {
-        labelStatusText += newText + "\n";
+        labelStatusText += newText + "\n\n";
         labelStatus.setText(labelStatusText);
     }
 

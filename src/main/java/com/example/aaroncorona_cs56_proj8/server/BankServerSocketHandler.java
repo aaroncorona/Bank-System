@@ -36,7 +36,6 @@ public final class BankServerSocketHandler implements Bank, Runnable {
             // Create input & output streams to the client
             fromClient = new ObjectInputStream(socket.getInputStream());
             toClient = new ObjectOutputStream(socket.getOutputStream());
-            BankServerGUI.addStatusText("Client connected");
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -44,6 +43,10 @@ public final class BankServerSocketHandler implements Bank, Runnable {
 
     @Override
     public void run() {
+        // Announce that the client has connected
+        Platform.runLater(()->{ // Use runLater to do the action on the Fx thread and not this thread
+            BankServerGUI.addStatusText("Client connected");
+        });
         while(socket.isConnected()) {
             // Get the client request object, then send a response String
             try {
@@ -51,12 +54,25 @@ public final class BankServerSocketHandler implements Bank, Runnable {
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
                 toClient.writeObject(response);
                 // Add the status of the response to the Server GUI
-                BankServerGUI.addStatusText(String.valueOf(response));
+                Platform.runLater(()->{
+                    BankServerGUI.addStatusText(String.valueOf(response));
+                });
             } catch (IOException e) {
                 System.out.println(e);
-                System.exit(0);
+                // End loop
+                endConnection();
+                Platform.runLater(()->{
+                    BankServerGUI.addStatusText(String.valueOf("Client disconnected"));
+                });
+                break;
             } catch (ClassNotFoundException e) {
                 System.out.println(e);
+                // End loop
+                endConnection();
+                Platform.runLater(()->{
+                    BankServerGUI.addStatusText(String.valueOf("Client disconnected"));
+                });
+                break;
             }
         }
     }

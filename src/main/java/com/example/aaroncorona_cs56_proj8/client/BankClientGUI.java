@@ -88,7 +88,7 @@ public final class BankClientGUI extends Application implements Runnable {
         });
         btnQuit.setOnAction(event -> {
             // Close the connection and exit the program
-            bank.endConnection();
+            addStatusText(bank.endConnection());
             System.exit(0);
         });
 
@@ -133,8 +133,9 @@ public final class BankClientGUI extends Application implements Runnable {
 
     // Helper method to update the response label
     private void addStatusText(String newText) {
-        labelStatusText += newText + "\n";
+        labelStatusText += newText + "\n\n";
         labelStatus.setText(labelStatusText);
+        System.out.println(newText);
     }
 
     @Override
