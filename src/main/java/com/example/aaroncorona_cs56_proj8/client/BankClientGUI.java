@@ -23,10 +23,6 @@ public final class BankClientGUI extends Application implements Runnable {
     private Label labelStatus;
     private String labelStatusText;
 
-    public BankClientGUI(Bank bank) {
-        this.bank = bank;
-    }
-
     public BankClientGUI() {
         bank = new BankProxy();
     }

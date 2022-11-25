@@ -9,15 +9,12 @@ package com.example.aaroncorona_cs56_proj8.client;
 import com.example.aaroncorona_cs56_proj8.proxy.Bank;
 import com.example.aaroncorona_cs56_proj8.proxy.BankProxy;
 
-// Driver to launch the Proxy and Client GUI
+// Driver to launch the Client GUI
 public class BankClient {
 
     public static void main(String[] args) {
-        // Create bank proxy
-        Bank bank = new BankProxy();
-
         // Launch a client GUI using the proxy
-        BankClientGUI gui = new BankClientGUI(bank);
+        BankClientGUI gui = new BankClientGUI();
         Thread guiThread = new Thread(gui);
         guiThread.start();
     }
