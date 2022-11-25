@@ -19,7 +19,9 @@ public class BankServerResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "Status: " + status + " Request: " + requestType + "; Account: " + acctNum +
-                ";\n The account now has a balance of: " + balance;
+        return "Status: " + status
+                + "; Request: " + requestType
+                + "; Account: " + acctNum
+                + "; Balance: " + balance;
     }
 }

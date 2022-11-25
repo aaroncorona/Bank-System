@@ -24,7 +24,7 @@ public final class BankProxy implements Bank {
             toServer = new ObjectOutputStream(socket.getOutputStream());
             fromServer = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
 
@@ -41,14 +41,12 @@ public final class BankProxy implements Bank {
                 System.out.println(response);
                 return response;
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             }
         }
-        else {
-            return "Error - Invalid Account Number";
-        }
+        return "Error - Invalid Account Number";
     }
 
     @Override
@@ -63,14 +61,12 @@ public final class BankProxy implements Bank {
                 String response = fromServer.readObject().toString();
                 return response;
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             }
         }
-        else {
-            return "Error - Invalid Account Number or Invalid Amount";
-        }
+        return "Error - Invalid Account Number or Invalid Amount";
     }
 
     @Override
@@ -86,14 +82,12 @@ public final class BankProxy implements Bank {
                 String response = fromServer.readObject().toString();
                 return response;
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             }
         }
-        else {
-            return "Error - Invalid Account Number or Invalid Amount";
-        }
+        return "Error - Invalid Account Number or Invalid Amount";
     }
 
     @Override
