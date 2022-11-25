@@ -12,6 +12,8 @@ import java.util.HashMap;
 // Helper class to handle individual Socket connections
 public final class BankServerSocketHandler implements Bank, Runnable {
     private Socket socket;
+    private ObjectInputStream fromClient;
+    private ObjectOutputStream toClient;
 
     // All threads should reference the same account map
     private static HashMap<Integer, Integer> accountBalance;
@@ -19,7 +21,22 @@ public final class BankServerSocketHandler implements Bank, Runnable {
     protected BankServerSocketHandler(Socket socket) {
         this.socket = socket;
 
+        createBankServerSocketStreams();
+
         accountBalance = new HashMap<>();
+    }
+
+    // Helper method to create a new socket and stream with the Client
+    private void createBankServerSocketStreams() {
+        try {
+            // Create a socket along with output & input streams to the server
+            System.out.println("creating input stream on the Server side...");
+            fromClient = new ObjectInputStream(socket.getInputStream());
+            System.out.println("creating output stream on the Server side...");
+            toClient = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     @Override
@@ -27,16 +44,15 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         while(socket.isConnected()) {
             // Get the client request object, then send a response String
             try {
-                // Create input and output streams
-                ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());
                 // Parse the client request, create the requested response, then send it back to the client
+                System.out.println("parsing request from input stream on the Server side...");
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
+                System.out.println(response); // todo delete
                 toClient.writeObject(response);
-                toClient.flush();
                 // TODO update Server GUI label
             } catch (IOException e) {
                 System.out.println(e);
+                System.exit(0);
             } catch (ClassNotFoundException e) {
                 System.out.println(e);
             }

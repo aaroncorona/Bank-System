@@ -28,12 +28,11 @@ public class BankClient extends Application {
     private String responseMsg = "";
     private Label labelResponse;
 
-    public BankClient() {
-        bank = new BankProxy();
-    }
-
     @Override
     public void start(Stage primaryStage) {
+
+        // Create bank proxy
+        bank = new BankProxy();
 
         // Add a Label and Text fields for "Account Number" in a Hbox
         final Label labelAcctNum = new Label("Enter Account Number:  ");
@@ -135,7 +134,6 @@ public class BankClient extends Application {
 
     // Main method to launch app
     public static void main(String[] args) {
-        BankClient client = new BankClient();
-        client.launch(args);
+        launch(args);
     }
 }
