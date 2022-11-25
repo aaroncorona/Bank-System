@@ -6,7 +6,7 @@
 
 *Example View with Multiple Clients*:
 
-<img width="800" alt="bank_system_ss" src="https://user-images.githubusercontent.com/31792170/204062228-573c1fb1-aa3f-4e17-b4cb-c46d769c0ef3.png">
+<img width="750" alt="bank_system_ss" src="https://user-images.githubusercontent.com/31792170/204062228-573c1fb1-aa3f-4e17-b4cb-c46d769c0ef3.png">
 
 *UML Class Diagram*:
 
