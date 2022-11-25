@@ -1,6 +1,10 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -10,13 +14,12 @@ import java.net.Socket;
 // Server that performs the Bank actions
 public final class BankServer extends Application {
 
-    private ServerSocket serverSocket;
+    private static ServerSocket serverSocket;
 
-    // Private constructor to force the use of inner Thread objects
-    private BankServer() {
-        startServer();
-        launch();
-    }
+    private static Label labelStatus;
+
+    // Private constructor to reinforce the design of just 1 Server with 1+ threads and proxies
+    private BankServer() {}
 
     // Helper method to launch the Server and wait for connections
     private void startServer() {
@@ -41,18 +44,42 @@ public final class BankServer extends Application {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
             }
         }
     }
 
     @Override
     public void start(Stage stage) {
-        // TODO add GUI label, add protected method to update it
+        // Add a title Label
+        final Label title = new Label("Server Responses");
+
+        // Add a Label that shows the status of the Server response
+        labelStatus = new Label();
+
+        // Create an outer container
+        final VBox vbox = new VBox();
+        vbox.getChildren().addAll(labelStatus);
+
+        // Wrap everything in a scrollbar
+        final ScrollPane root = new ScrollPane();
+        root.setFitToWidth(true);
+        root.setContent(vbox);
+
+        // Scene
+        final Scene scene = new Scene(root, 400,500);
+        stage.setTitle("Server Responses");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Allow the socket handler to update the response label to show the status of Server requests
+    protected static void addStatusText(String text) {
+        // TODO
     }
 
     // Main method to launch the server
     public static void main(String[] args) {
-        new BankServer();
+        launch(args);
     }
 }

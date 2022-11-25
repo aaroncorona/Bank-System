@@ -48,7 +48,8 @@ public final class BankServerSocketHandler implements Bank, Runnable {
                 // Parse the client request, create the requested response, then send it back to the client
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
                 toClient.writeObject(response);
-                // TODO update Server GUI label
+                // Add the status of the response to the Server GUI
+                BankServer.addStatusText(String.valueOf(response));
             } catch (IOException e) {
                 System.out.println(e);
                 System.exit(0);

@@ -2,8 +2,8 @@ package com.example.aaroncorona_cs56_proj8.proxy;
 
 import java.io.Serializable;
 
-// Helper class to assist the Proxy with making requests over a stream
-public class BankServerRequest implements Serializable {
+// Wrapper class for sending requests (as an obj) over a stream. Acts as a Helper class to assist the Proxy
+public final class BankServerRequest implements Serializable {
     private String requestType;
     private int acctNum;
     private int amount;
