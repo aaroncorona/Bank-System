@@ -1,13 +1,14 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
 import com.example.aaroncorona_cs56_proj8.proxy.Bank;
-import com.example.aaroncorona_cs56_proj8.proxy.BankServerRequest;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 // Helper class to handle individual Socket connections
 public final class BankServerSocketHandler implements Bank, Runnable {
@@ -15,15 +16,17 @@ public final class BankServerSocketHandler implements Bank, Runnable {
     private ObjectInputStream fromClient;
     private ObjectOutputStream toClient;
 
-    // All threads should reference the same account map
-    private static HashMap<Integer, Integer> accountBalance;
+    // All threads should reference the same immutable account map
+    private static Map<Integer, Integer> accountBalance;
 
     protected BankServerSocketHandler(Socket socket) {
         this.socket = socket;
 
         createBankServerSocketStreams();
 
+        // Create immutable map
         accountBalance = new HashMap<>();
+        accountBalance = Collections.unmodifiableMap(accountBalance);
     }
 
     // Helper method to create a new socket and stream with the Client
@@ -112,14 +115,13 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         if(accountBalance.containsKey(acctNum)) {
             balance = accountBalance.get(acctNum);
             balance += amount;
-            accountBalance.put(acctNum, balance);
+            immutableMapUpdate(acctNum, balance);
         } else {
             // Otherwise, create a new account with the deposit as the balance
             balance = amount;
-            accountBalance.put(acctNum, balance);
+            immutableMapUpdate(acctNum, balance);
         }
         return "Balance: " + balance;
-        // TODO use immutableMapUpdate
     }
 
     // Make a withdrawal and return the new balance
@@ -128,19 +130,17 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         int balance = 0;
         // Start the withdrawal if the account exists
         if(accountBalance.containsKey(acctNum)) {
-            // Get account balance
-            balance = accountBalance.get(acctNum);
             // Check if the account balance has enough for the withdrawal
+            balance = accountBalance.get(acctNum);
             if(balance >= amount) {
                 balance -= amount;
-                accountBalance.put(acctNum, balance);
+                immutableMapUpdate(acctNum, balance);
             } else {
                 // Return an error if there is not enough for the withdrawal
                 return "Error: Insufficient Funds for the Withdrawal; " + "Balance: " + balance;
             }
         }
         return "Balance: " + balance;
-        // TODO use immutableMapUpdate
     }
 
     @Override
@@ -156,8 +156,13 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         return "Connection closed";
     }
 
-    // Helper method to rebuild the hashmap in a new memory slot for better thread safety
-    private synchronized void immutableMapUpdate(int key, int value) {
-        // TODO write logic
+    // Helper method to rebuild the hashmap in a new memory slot on every update for better thread safety
+    // Note: The pointer is immutable (not final) and the object is mutable, hence the need for synchronization
+    private static synchronized void immutableMapUpdate(int key, int value) {
+        // Create a copy of the map in a different memory location and update the object
+        Map<Integer, Integer> clone = new HashMap<>(accountBalance);
+        clone.put(key, value);
+        // Point the hashmap variable to the new location to maintain immutability
+        accountBalance = clone;
     }
 }
