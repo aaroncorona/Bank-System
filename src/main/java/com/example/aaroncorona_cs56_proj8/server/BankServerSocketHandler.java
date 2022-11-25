@@ -30,9 +30,7 @@ public final class BankServerSocketHandler implements Bank, Runnable {
     private void createBankServerSocketStreams() {
         try {
             // Create a socket along with output & input streams to the server
-            System.out.println("creating input stream on the Server side...");
             fromClient = new ObjectInputStream(socket.getInputStream());
-            System.out.println("creating output stream on the Server side...");
             toClient = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             System.out.println(e);
@@ -45,9 +43,7 @@ public final class BankServerSocketHandler implements Bank, Runnable {
             // Get the client request object, then send a response String
             try {
                 // Parse the client request, create the requested response, then send it back to the client
-                System.out.println("parsing request from input stream on the Server side...");
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
-                System.out.println(response); // todo delete
                 toClient.writeObject(response);
                 // TODO update Server GUI label
             } catch (IOException e) {
@@ -76,17 +72,12 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         }
         // Get status (successful or failed request)
         String status = "Success";
-        if(result == null
+        if(result.contains("Error")
              || result.length() == 0) {
             status = "Failed";
         }
         // Get the new Balance after the Bank action
-        int endBalance;
-        if(status.equals("Success")) {
-            endBalance = Integer.parseInt(getNextWordInString(result, "Balance"));
-        } else {
-            endBalance = 0;
-        }
+        int endBalance = Integer.parseInt(getNextWordInString(result, "Balance"));
         // Return the full Server Response message
         BankServerResponse response = new BankServerResponse(status, requestType, acctNum, endBalance);
         return response;
@@ -135,11 +126,18 @@ public final class BankServerSocketHandler implements Bank, Runnable {
     @Override
     public String makeWithdraw(int acctNum, int amount) {
         int balance = 0;
-        // Make the withdrawal if the account exists
+        // Start the withdrawal if the account exists
         if(accountBalance.containsKey(acctNum)) {
+            // Get account balance
             balance = accountBalance.get(acctNum);
-            balance -= amount;
-            accountBalance.put(acctNum, balance);
+            // Check if the account balance has enough for the withdrawal
+            if(balance >= amount) {
+                balance -= amount;
+                accountBalance.put(acctNum, balance);
+            } else {
+                // Return an error if there is not enough for the withdrawal
+                return "Error: Insufficient Funds for the Withdrawal; " + "Balance: " + balance;
+            }
         }
         return "Balance: " + balance;
         // TODO use immutableMapUpdate

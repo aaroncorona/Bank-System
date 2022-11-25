@@ -20,11 +20,8 @@ public final class BankProxy implements Bank {
     private void createBankClientSocketStreams() {
         try {
             // Create a socket along with output & input streams to the server
-            System.out.println("creating client socket on the Client side...");
             socket = new Socket("localhost", 8000);
-            System.out.println("creating output stream on the Client side...");
             toServer = new ObjectOutputStream(socket.getOutputStream());
-            System.out.println("creating input stream on the Client side...");
             fromServer = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             System.out.println(e);
@@ -37,14 +34,10 @@ public final class BankProxy implements Bank {
         if(acctNum > 0) {
             try {
                 // Send request to Server
-                System.out.println("putting together the request to the server..."); // todo delete comments
                 BankServerRequest request = new BankServerRequest("Balance", acctNum);
                 toServer.writeObject(request);
-                System.out.println("request sent!");
                 // Return response from Server
-                System.out.println("waiting for response from server...");
                 String response = fromServer.readObject().toString();
-                System.out.println("got response from server: " + response);
                 return response;
             } catch (IOException e) {
                 System.out.println(e);
@@ -57,7 +50,7 @@ public final class BankProxy implements Bank {
 
     @Override
     public String makeDeposit(int acctNum, int amount) {
-        // Make deposit if valid request
+        // Request deposit if valid request
         if(acctNum > 0 && amount > 0) {
             try {
                 // Send request
@@ -77,8 +70,7 @@ public final class BankProxy implements Bank {
 
     @Override
     public String makeWithdraw(int acctNum, int amount) {
-        // TODO Check if there are enough funds for the withdrawal on behalf of the Server. Otherwise, make the withdrawal
-        // Make withdrawal if valid request
+        // Request withdrawal if valid request
         if(acctNum > 0 && amount > 0) {
             try {
                 // Send request
