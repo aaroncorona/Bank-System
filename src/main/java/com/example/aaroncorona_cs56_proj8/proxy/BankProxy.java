@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-// This is a user-facing Proxy that connects to the real Bank Server
+// User-facing Proxy that connects to the real Bank Server
 public final class BankProxy implements Bank {
 
     private Socket socket;

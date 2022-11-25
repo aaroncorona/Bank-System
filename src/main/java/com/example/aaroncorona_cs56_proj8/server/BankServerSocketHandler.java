@@ -1,6 +1,7 @@
 package com.example.aaroncorona_cs56_proj8.server;
 
 import com.example.aaroncorona_cs56_proj8.proxy.Bank;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,7 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-// Helper class to handle individual Socket connections
+// Handles individual Socket connections by performing Bank actions in a Thread
 public final class BankServerSocketHandler implements Bank, Runnable {
     private Socket socket;
     private ObjectInputStream fromClient;
@@ -29,12 +30,13 @@ public final class BankServerSocketHandler implements Bank, Runnable {
         accountBalance = Collections.unmodifiableMap(accountBalance);
     }
 
-    // Helper method to create a new socket and stream with the Client
+    // Helper method to create streams with the Client
     private void createBankServerSocketStreams() {
         try {
-            // Create a socket along with output & input streams to the server
+            // Create input & output streams to the client
             fromClient = new ObjectInputStream(socket.getInputStream());
             toClient = new ObjectOutputStream(socket.getOutputStream());
+            BankServerGUI.addStatusText("Client connected");
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -49,7 +51,7 @@ public final class BankServerSocketHandler implements Bank, Runnable {
                 BankServerResponse response = buildResponseFromRequest(fromClient.readObject().toString());
                 toClient.writeObject(response);
                 // Add the status of the response to the Server GUI
-                BankServer.addStatusText(String.valueOf(response));
+                BankServerGUI.addStatusText(String.valueOf(response));
             } catch (IOException e) {
                 System.out.println(e);
                 System.exit(0);
