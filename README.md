@@ -2,7 +2,7 @@
 
 **Purpose**: This is a side project to practice Proxy design, Multithreading and JavaFx.
 
-**Project**: I created a Client and Server system with a Proxy design to enable standard bank account transactions.
+**Project Objective**: Build a Client and Server system for bank account transactions using a Proxy design.
 
 *Example View with 3 Clients*:
 
